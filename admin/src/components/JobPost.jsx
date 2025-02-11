@@ -63,11 +63,7 @@ function JobPost() {
     },
   ];
 
-  // const data = [
-  //   {
-  //     title:"Full Stack Developer",skills:"react,node,express,mongodb",experience:"2years",status:"Active"
-  //   }
-  // ]
+  
 
   // useEffect(() => {
   //   axios.get("http://localhost:3000/api/v1/jobpost").then((res) => {
@@ -96,20 +92,6 @@ function JobPost() {
   }
 
 
-  // const handleDelete = (id) => {
-  //   if(window.confirm("Do you Want to Delete..?")){
-  //   axios.delete(`http://localhost:3000/api/v1/product/${id}`)
-  //   .then((response) => {
-  //     console.log(response.data);
-  //     const FilteredItems = product.filter((item) => item.id !== id);
-  //     setJob(FilteredItems);
-  //   })
-  //   .catch((error) => {
-  //     console.log(error);
-  //   });
-  // }
-  // }
-
 
   const handleDelete = (id) => {
     setId(id);
@@ -130,22 +112,7 @@ function JobPost() {
 
 }
  
-    // if (window.confirm("Do you want to delete?")) {
-    //   axios.delete(`http://localhost:3000/api/v1/product/${id}`)
-    //     .then((response) => {
-    //       if (response.status === 200) {
-    //         const filteredItems = product.filter((item) => item._id !== id);
-    //         setJob(filteredItems);
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       console.error("There was an error deleting the product:", error);
-    //     });
-    // }
-
-
-  // if(ok) return <DeleteModel id={id} setOk={setOk} ok={ok} product={product} setJob={setJob} />
-  
+ 
  
   
   if (isAdd) return (

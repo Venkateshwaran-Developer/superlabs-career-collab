@@ -13,7 +13,7 @@ CREATE TABLE jobpost(
     job_description TEXT ,
     job_interview_rounds VARCHAR(255) ,
     job_budget VARCHAR(255) ,
-    job_post_date DATE ,
-    job_close_date DATE ,
+    job_create_date TEXT ,
+    job_close_date TEXT ,
     job_status TEXT 
     );

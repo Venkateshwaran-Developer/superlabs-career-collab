@@ -15,12 +15,14 @@ const postJob = async (req, res) => {
       job_description,
       job_interview_rounds,
       job_budget,
-      job_post_date,
+      job_create_date,
       job_close_date,
       job_status,
     } = req.body;
+    
+    
     const newJob = await client.query(
-      `INSERT INTO jobpost (job_title,job_location_type,job_category,job_type,job_location,job_experience_level,job_technical_skills,job_education_qualification,job_description,job_interview_rounds,job_budget,job_post_date,job_close_date,job_status) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *`,
+      `INSERT INTO jobpost (job_title,job_location_type,job_category,job_type,job_location,job_experience_level,job_technical_skills,job_education_qualification,job_description,job_interview_rounds,job_budget,job_create_date,job_close_date,job_status) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *`,
       [
         job_title,
         job_location_type,
@@ -33,7 +35,7 @@ const postJob = async (req, res) => {
         job_description,
         job_interview_rounds,
         job_budget,
-        job_post_date,
+        job_create_date,
         job_close_date,
         job_status,
       ]
