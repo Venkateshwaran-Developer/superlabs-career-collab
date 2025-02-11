@@ -27,17 +27,17 @@ function JobPost() {
     },
     {
       name: "Skills",
-      selector: (row) => row.skills,
+      selector: (row) => row.job_technical_skills,
       sortable: true,
     },
     {
       name: "Experience",
-      selector: (row) => row.experience,
+      selector: (row) => row.job_experience_level,
       sortable: true,
     },
     {
       name: "Status",
-      selector: (row) => row.status,
+      selector: (row) => row.job_status,
       sortable: true,
     },
     {
@@ -65,18 +65,18 @@ function JobPost() {
 
   
 
-  // useEffect(() => {
-  //   axios.get("http://localhost:3000/api/v1/jobpost").then((res) => {
-  //     setJob(res.data);
-  //   });
-  // }, [setJob]);
+  useEffect(() => {
+    axios.get("http://localhost:3000/api/v1/jobpost").then((res) => {
+      setJob(res.data);
+    });
+  }, [setJob]);
 
   
 
  
   const filteredItems = job.filter(
     (item) =>
-      item.title && item.title.toLowerCase().includes(filterText.toLowerCase())
+      item.job_title && item.job_title.toLowerCase().includes(filterText.toLowerCase())
   );
   const onFilter = (e) => setFilterText(e.target.value);
   const handleClear = () => {
