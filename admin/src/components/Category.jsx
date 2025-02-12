@@ -147,7 +147,7 @@ const Category = () => {
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDelete(location.category_id)}
+                    onClick={() => handleDelete(category.category_id)}
                     className="text-sm font-medium border-2 bg-red-400 text-white px-3 rounded-full"
                   >
                     Delete
@@ -165,8 +165,8 @@ AddCategory.propTypes = {
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   editData: PropTypes.shape({
-    location_id: PropTypes.number,
-    location_title: PropTypes.string,
+    category_id: PropTypes.number,
+    category_title: PropTypes.string,
   }),
 };
 

@@ -1,5 +1,4 @@
 const client = require("../config/connectdatabase");
-const { updateLocation } = require("./locationController");
 
 const postCategory = async (req, res) => {
     try {
