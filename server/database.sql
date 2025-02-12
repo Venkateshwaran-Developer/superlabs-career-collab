@@ -26,3 +26,9 @@ CREATE TABLE category(
     category_id SERIAL PRIMARY KEY,
     category_title VARCHAR(255)
     );
+
+CREATE TABLE users(
+    user_id SERIAL PRIMARY KEY,
+    user_title VARCHAR(255),
+    user_password VARCHAR(255)
+    );
