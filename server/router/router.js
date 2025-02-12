@@ -10,12 +10,7 @@ router.post("/jobpost",postJob )
 router.get("/jobpost",getAllJobPost)
 
 router.delete("/jobpost/:id", deleteJobPost);
-router.put("/product/:id",updateProduct );
 
-router.get("/product/:id",getSingleProduct );
-
-
-router.delete("/product/:id", deleteProduct);
 
 //location
 //create location

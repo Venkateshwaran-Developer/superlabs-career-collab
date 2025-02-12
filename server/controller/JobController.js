@@ -60,7 +60,7 @@ const deleteJobPost = async (req, res) => {
   const { id } = req.params;
   console.log(id);
   try {
-    await client.query("DELETE FROM jobpost WHERE job_id = $1 RETURNING *", [id]);
+    await client.query("DELETE FROM jobpost WHERE job_id = $1", [id]);
     res.json({ message: "Job posting deleted successfully" });
     } catch (err) {
       console.error(err.message);

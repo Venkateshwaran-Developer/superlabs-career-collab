@@ -3,7 +3,7 @@ const client = new Client({
   host: "localhost",
   user: "postgres",
   port: 5432,
-  password: "moorthivijiya",
+  password: "venkaT9944",
   database: "superlabs_career",
 
 });

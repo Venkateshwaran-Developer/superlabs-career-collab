@@ -1,11 +1,9 @@
 CREATE DATABASE superlabs_career;
 
-<<<<<<< HEAD
 CREATE TABLE location(
     location_id SERIAL PRIMARY KEY,
     location_title VARCHAR(255)
     );
-=======
 CREATE TABLE jobpost(
     job_id SERIAL PRIMARY KEY,
     job_title TEXT ,
@@ -23,7 +21,6 @@ CREATE TABLE jobpost(
     job_close_date TEXT ,
     job_status TEXT 
     );
->>>>>>> 84ffdb1de02fb0a58c79d0e433a0944b28b731be
 
 CREATE TABLE category(
     category_id SERIAL PRIMARY KEY,

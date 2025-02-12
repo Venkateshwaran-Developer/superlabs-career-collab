@@ -8,13 +8,14 @@ import {
 } from "@material-tailwind/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // Import Quill styles
 import "../index.css";
 
 
 function AddJobPost({ job, setJob, setIsAdd }) {
+  const [category, setCategory] = useState([]);
    const [newJobPost, setNewJobPost] = useState([
     {
       job_title: "",
@@ -185,6 +186,14 @@ function AddJobPost({ job, setJob, setIsAdd }) {
      );
    };
 
+   useEffect(()=>{
+    axios.get("http://localhost:3000/api/v1/category")
+    .then((response) => {
+      setCategory(response.data);
+      })
+
+  })
+
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -316,15 +325,10 @@ function AddJobPost({ job, setJob, setIsAdd }) {
                 onChange={(e) => handleSingleFieldChange(e)}
               >
                 <option>Choose your job Category</option>
-                <option name="ManagementRole"  value="ManagementRole">
-                  Management Role
-                </option>
-                <option name="DevelopmentRole" value="DevelopmentRole">
-                  Development Role
-                </option>
-                <option name="SalesRole" value="SalesRole">
-                Sales Role                
-                </option>
+                {
+                  category.map((category) => (
+                    <option key={category.category_id} value={category.category_title}>{category.category_title}</option>))
+                }
               </select>
             </div>
           </div>
@@ -409,7 +413,7 @@ function AddJobPost({ job, setJob, setIsAdd }) {
                 <input
                   type="text"
                   value={jobLocation}
-                  
+
                   onChange={handleInputLocationChange}
                   onKeyDown={handleKeyDownJobLocation}
                   placeholder="Enter a value and press Enter"

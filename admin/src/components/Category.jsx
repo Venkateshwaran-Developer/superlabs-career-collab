@@ -105,7 +105,10 @@ const Category = () => {
   };
 
   return (
-    <main className="bg-white h-screen w-[82vw]">
+    <main className="flex justify-center items-center h-screen w-[82vw]">
+    <div className="flex pt-7 flex-col scrollbar scrollbar-thumb-sky-700 scrollbar-track-sky-300 h-32 overflow-y-scroll  px-10  w-[78vw] min-h-[90vh]  rounded-3xl  bg-white">
+
+    
       <div className="flex justify-between items-center py-5 px-10 bg-gradient-to-r from-[#F9FAFB] to-[#D9E9F5] text-4xl">
         <h1>Category</h1>
         <button
@@ -157,6 +160,7 @@ const Category = () => {
             ))}
           </tbody>
         </table>
+      </div>
       </div>
     </main>
   );
