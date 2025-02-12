@@ -1,19 +1,12 @@
-const {getAllJobPost,postJob, getSingleProduct,deleteProduct, updateProduct} = require("../controller/JobController");
+const {getAllJobPost,postJob, deleteJobPost} = require("../controller/JobController");
 const express = require('express');
 const router = express.Router();
-
-
 
 router.post("/jobpost",postJob )
 
 router.get("/jobpost",getAllJobPost)
 
-router.put("/product/:id",updateProduct );
-
-router.get("/product/:id",getSingleProduct );
-
-
-router.delete("/product/:id", deleteProduct);
+router.delete("/jobpost/:id", deleteJobPost);
 
 
 module.exports = router;

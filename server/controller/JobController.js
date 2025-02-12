@@ -55,91 +55,22 @@ const getAllJobPost = async (req, res) => {
   }
 };
 
-const getSingleProduct = async (req, res) => {
+const deleteJobPost = async (req, res) => {
+  
+  const { id } = req.params;
+  console.log(id);
   try {
-    const product = await ProductDetailModel.findById(req.params.id);
-    res.send(product);
-  } catch (err) {
-    res.status(400).send({ message: err.message });
-  }
-};
-
-const deleteProduct = async (req, res) => {
-  try {
-    const user = await ProductDetailModel.findByIdAndDelete(req.params.id);
-    res.send(user);
-  } catch (err) {
-    res.status(400).send({ message: err.message });
-  }
-};
-
-const updateProduct = async (req, res) => {
-  try {
-    console.log(req.body);
-
-    const singleUser = await ProductDetailModel.findById(req.params.id);
-
-    const filenamesToUpdate = req.files.map((file) => file.filename);
-    const imageId = req.params.id;
-
-    // Fetch existing images from the database
-    const existingImages = await ProductDetailModel.findById(imageId).exec();
-
-    // Create a copy of the existing images to work with
-    let updatedImages = [...existingImages.images];
-
-    // Get the list of images to remove from the request body
-    const imagesToRemove = req.body.imagesToRemove || []; // Ensure this is an array
-
-    // Check if there are images to remove
-    if (imagesToRemove.length > 0) {
-      // Condition to remove specified images only if there are any to remove
-      updatedImages = updatedImages.filter(
-        (image) => !imagesToRemove.includes(image)
-      );
-    }
-
-    // Combine existing images with new uploads
-    const updatedFilenamesList = [...updatedImages, ...filenamesToUpdate];
-
-    // If you want to update the database, do it here:
-    existingImages.images = updatedFilenamesList;
-    await existingImages.save();
-
-    console.log("Original Images:", existingImages.images);
-    console.log("Images to Remove:", imagesToRemove);
-    console.log("Updated Images After Removal:", updatedImages);
-
-    const user = await ProductDetailModel.findByIdAndUpdate(
-      req.params.id,
-      {
-        title: req.body.title || singleUser.title,
-        price: req.body.price || singleUser.price,
-        description: req.body.description || singleUser.description,
-        images: existingImages.images,
-        variants: req.body.variants || singleUser.variants,
-        category: req.body.category || singleUser.category,
-        brand: req.body.brand || singleUser.brand,
-        tags: req.body.tags || singleUser.tags,
-        shippingandcustoms:
-          req.body.shippingandcustoms || singleUser.shippingandcustoms,
-        status: req.body.status || singleUser.status,
-        deals: req.body.deals || singleUser.deals,
-      },
-      {
-        new: true,
+    await client.query("DELETE FROM jobpost WHERE job_id = $1 RETURNING *", [id]);
+    res.json({ message: "Job posting deleted successfully" });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).json({ message: "Failed to delete job posting" });
       }
-    );
-    res.json(user);
-  } catch (err) {
-    res.status(400).send({ message: err.message });
-  }
-};
+      };
+
 
 module.exports = {
   getAllJobPost,
   postJob,
-  deleteProduct,
-  getSingleProduct,
-  updateProduct,
+  deleteJobPost
 };

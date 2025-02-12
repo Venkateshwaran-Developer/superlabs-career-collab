@@ -52,7 +52,7 @@ function JobPost() {
           </button>
           <button
             className="bg-red-500 p-2 rounded-md"
-            onClick={() => handleDelete(row._id)}
+            onClick={() => handleDelete(row.job_id)}
           >
             Delete
           </button>
@@ -91,18 +91,20 @@ function JobPost() {
     setIsAdd(true);
   }
 
-
-
-  const handleDelete = (id) => {
-    setId(id);
+  const handleDelete = (job_id) => {
+    setId(job_id);
     setOk(true);
   };
 
   const handleDeleteItem = (id) => {
-    axios.delete(`http://localhost:3000/api/v1/product/${id}`)
+    console.log(id)
+
+
+
+    axios.delete(`http://localhost:3000/api/v1/jobpost/${id}`)
     .then((response) => {
       if (response.status === 200) {
-        const filteredItems = product.filter((item) => item._id !== id);
+        const filteredItems = job.filter((item) => item.job_id !== id);
         setJob(filteredItems);
       }
     })
@@ -127,8 +129,8 @@ function JobPost() {
     );
     
     
-    const handleEdit = (emp)=>{    
-      setEditId(emp._id);
+    const handleEdit = (row)=>{    
+      setEditId(emp.job_id);
       setIsEdit(true); 
     
     }
