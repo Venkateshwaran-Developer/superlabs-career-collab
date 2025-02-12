@@ -1,12 +1,13 @@
-const {getAllProduct,postJob, getSingleProduct,deleteProduct, updateProduct} = require("../controller/JobController");
+const {getAllJobPost,postJob, getSingleProduct,deleteProduct, updateProduct} = require("../controller/JobController");
 const express = require('express');
 const router = express.Router();
-const { postLocation, getLocation, updateLocation, deleteLocation } = require("../controller/locationController")
+const { postLocation, getLocation, updateLocation, deleteLocation } = require("../controller/locationController");
+const { postCategory, getCategory, updateCategory, deleteCategory } = require("../controller/categoryController");
 
 
 router.post("/jobpost",postJob )
 
-router.get("/product",getAllProduct)
+router.get("/jobpost",getAllJobPost)
 
 router.put("/product/:id",updateProduct );
 
@@ -24,6 +25,16 @@ router.get("/location", getLocation)
 router.put("/location/:id", updateLocation)
 //delete location
 router.delete("/location/:id",deleteLocation)
+
+//category
+//create category
+router.post("/category", postCategory);
+//get all category
+router.get("/category", getCategory)
+//update category
+router.put("/category/:id", updateCategory)
+//delete category
+router.delete("/category/:id",deleteCategory)
 
 
 module.exports = router;

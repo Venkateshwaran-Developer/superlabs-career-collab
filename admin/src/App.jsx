@@ -5,11 +5,11 @@ import MainLayout from "./components/MainLayout";
 import Dashboard from './components/Dashboard';
 import JobPost from "./components/JobPost";
 import Location from "./components/Location";
-import Categories from "./components/Categories";
 import Users from "./components/Users";
 import SelectedCandidates from "./components/SelectedCandidates";
 export const ThemeContext = createContext();
 import { MantineProvider } from '@mantine/core';
+import Category from "./components/Category";
 
 
 
@@ -28,7 +28,7 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="jobpost" element={<JobPost />} />
           <Route path="location" element={<Location />} />
-          <Route path="categories" element={<Categories />} />
+          <Route path="category" element={<Category />} />
           <Route path="users" element={<Users />} />
           <Route path="selectedcandidates" element={<SelectedCandidates />} />
           {/* <Route path="*" element={<NoPage />} /> */}

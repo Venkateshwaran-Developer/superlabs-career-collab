@@ -14,7 +14,7 @@ function MainLayout() {
         <Link to="/">Dashboard</Link>
         <Link to="/jobpost">JobPost</Link>
         <Link to="/location">Location</Link>
-        <Link to="/categories">Categories</Link>
+        <Link to="/category">Categories</Link>
         <Link to="/users">Users</Link>
         <Link to="/selectedcandidates">Selected Candidates</Link>
       </div>
