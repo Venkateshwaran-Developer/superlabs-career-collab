@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { postLocation, getLocation, updateLocation, deleteLocation } = require("../controller/locationController");
 const { postCategory, getCategory, updateCategory, deleteCategory } = require("../controller/categoryController");
+const { postUser, getUser, updateUser, deleteUser } = require("../controller/usersController");
 
 
 router.post("/jobpost",postJob )
@@ -36,5 +37,14 @@ router.put("/category/:id", updateCategory)
 //delete category
 router.delete("/category/:id",deleteCategory)
 
+//user
+//create user
+router.post("/users", postUser);
+//get all category
+router.get("/users", getUser)
+//update category
+router.put("/users/:id", updateUser)
+//delete category
+router.delete("/users/:id",deleteUser)
 
 module.exports = router;
