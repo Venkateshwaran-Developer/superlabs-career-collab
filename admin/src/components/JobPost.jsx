@@ -5,13 +5,13 @@ import { useContext } from "react";
 import AddJobPost from "./AddJobPost";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import EditProduct from "./EditProduct";
+import EditJobPost from "./EditJobPost";
 function JobPost() {
   const { job, setJob } = useContext(ThemeContext);
-    
+
   const [isAdd, setIsAdd] = useState(false);
-  const [editId,setEditId]=useState('');
-  const [isEdit,setIsEdit]=useState('');
+  const [editId, setEditId] = useState("");
+  const [isEdit, setIsEdit] = useState("");
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
   const [open, setOpen] = useState(false);
@@ -27,17 +27,17 @@ function JobPost() {
     },
     {
       name: "Skills",
-      selector: (row) => row.skills,
+      selector: (row) => row.job_technical_skills,
       sortable: true,
     },
     {
       name: "Experience",
-      selector: (row) => row.experience,
+      selector: (row) => row.job_experience_level,
       sortable: true,
     },
     {
       name: "Status",
-      selector: (row) => row.status,
+      selector: (row) => row.job_status,
       sortable: true,
     },
     {
@@ -63,20 +63,16 @@ function JobPost() {
     },
   ];
 
-  
+  useEffect(() => {
+    axios.get("http://localhost:3000/api/v1/jobpost").then((res) => {
+      setJob(res.data);
+    });
+  }, [setJob]);
 
-  // useEffect(() => {
-  //   axios.get("http://localhost:3000/api/v1/jobpost").then((res) => {
-  //     setJob(res.data);
-  //   });
-  // }, [setJob]);
-
-  
-
- 
-  const filteredItems = job.filter(
+  const filteredItems = job?.filter(
     (item) =>
-      item.title && item.title.toLowerCase().includes(filterText.toLowerCase())
+      item.job_title &&
+      item.job_title.toLowerCase().includes(filterText.toLowerCase())
   );
   const onFilter = (e) => setFilterText(e.target.value);
   const handleClear = () => {
@@ -86,12 +82,9 @@ function JobPost() {
     }
   };
 
-
   function handleOpen() {
     setIsAdd(true);
   }
-
-
 
   const handleDelete = (id) => {
     setId(id);
@@ -99,23 +92,21 @@ function JobPost() {
   };
 
   const handleDeleteItem = (id) => {
-    axios.delete(`http://localhost:3000/api/v1/product/${id}`)
-    .then((response) => {
-      if (response.status === 200) {
-        const filteredItems = product.filter((item) => item._id !== id);
-        setJob(filteredItems);
-      }
-    })
-    .catch((error) => {
-      console.error("There was an error deleting the product:", error);
-    });
+    axios
+      .delete(`http://localhost:3000/api/v1/product/${id}`)
+      .then((response) => {
+        if (response.status === 200) {
+          const filteredItems = product.filter((item) => item._id !== id);
+          setJob(filteredItems);
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error deleting the product:", error);
+      });
+  };
 
-}
- 
- 
- 
-  
-  if (isAdd) return (
+  if (isAdd)
+    return (
       <AddJobPost
         handleOpen={handleOpen}
         setOpen={setOpen}
@@ -125,17 +116,24 @@ function JobPost() {
         setIsAdd={setIsAdd}
       />
     );
-    
-    
-    const handleEdit = (emp)=>{    
-      setEditId(emp._id);
-      setIsEdit(true); 
-    
-    }
-    if(isEdit) return <EditProduct  setOpen={setOpen} handleOpen={handleOpen} product={product} setJob={setJob} isEdit={isEdit} editId={editId} setIsEdit={setIsEdit}/>
-    
-   
 
+  const handleEdit = (row) => {
+    setEditId(row.job_id);
+    setIsEdit(true);
+  };
+
+  if (isEdit)
+    return (
+      <EditJobPost
+        setOpen={setOpen}
+        handleOpen={handleOpen}
+        isEdit={isEdit}
+        editId={editId}
+        setIsEdit={setIsEdit}
+        setJob={setJob}
+        setIsAdd={setIsAdd}
+      />
+    );
 
   return (
     <div>
@@ -175,27 +173,27 @@ function JobPost() {
 
           {ok && (
             <div className="z-50 absolute  h-full w-full flex  justify-center  pt-5 top-0 left-0">
-      <div className=" w-[400px] h-[200px] flex flex-col gap-5 items-center justify-center bg-blue-300 rounded-3xl">
-        <h1>Are you sure you want to delete this product?</h1>
-        <div className=" flex gap-4">
-          <button
-            onClick={() => {
-              handleDeleteItem(id);
-                setOk(false)
-            }}
-            className=" px-4 py-2 rounded-xl bg-red-700"
-          >
-            Yes
-          </button>
-          <button
-            onClick={() => setOk(false)}
-            className=" px-4 py-2 rounded-xl bg-blue-500"
-          >
-            No
-          </button>
-        </div>
-      </div>
-    </div>
+              <div className=" w-[400px] h-[200px] flex flex-col gap-5 items-center justify-center bg-blue-300 rounded-3xl">
+                <h1>Are you sure you want to delete this product?</h1>
+                <div className=" flex gap-4">
+                  <button
+                    onClick={() => {
+                      handleDeleteItem(id);
+                      setOk(false);
+                    }}
+                    className=" px-4 py-2 rounded-xl bg-red-700"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    onClick={() => setOk(false)}
+                    className=" px-4 py-2 rounded-xl bg-blue-500"
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
 
           <div>

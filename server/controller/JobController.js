@@ -1,4 +1,4 @@
-const client =require( "../config/connectdatabase");
+const client = require("../config/connectdatabase");
 const ProductDetailModel = require("../model/productDetail");
 
 const postJob = async (req, res) => {
@@ -19,8 +19,7 @@ const postJob = async (req, res) => {
       job_close_date,
       job_status,
     } = req.body;
-    
-    
+
     const newJob = await client.query(
       `INSERT INTO jobpost (job_title,job_location_type,job_category,job_type,job_location,job_experience_level,job_technical_skills,job_education_qualification,job_description,job_interview_rounds,job_budget,job_create_date,job_close_date,job_status) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *`,
       [
@@ -48,100 +47,108 @@ const postJob = async (req, res) => {
   }
 };
 
-const getAllProduct = async (req, res) => {
+const getAllJobPost = async (req, res) => {
   try {
-    const product = await ProductDetailModel.find();
-    res.send(product);
+    const result = await client.query("SELECT * FROM jobpost");
+    res.json(result.rows);
   } catch (err) {
     res.status(400).send({ message: err.message });
   }
 };
 
-const getSingleProduct = async (req, res) => {
+const getSingleJobPost = async (req, res) => {
+  console.log(req.params.id);
+
   try {
-    const product = await ProductDetailModel.findById(req.params.id);
-    res.send(product);
-  } catch (err) {
-    res.status(400).send({ message: err.message });
-  }
-};
-
-const deleteProduct = async (req, res) => {
-  try {
-    const user = await ProductDetailModel.findByIdAndDelete(req.params.id);
-    res.send(user);
-  } catch (err) {
-    res.status(400).send({ message: err.message });
-  }
-};
-
-const updateProduct = async (req, res) => {
-  try {
-    console.log(req.body);
-
-    const singleUser = await ProductDetailModel.findById(req.params.id);
-
-    const filenamesToUpdate = req.files.map((file) => file.filename);
-    const imageId = req.params.id;
-
-    // Fetch existing images from the database
-    const existingImages = await ProductDetailModel.findById(imageId).exec();
-
-    // Create a copy of the existing images to work with
-    let updatedImages = [...existingImages.images];
-
-    // Get the list of images to remove from the request body
-    const imagesToRemove = req.body.imagesToRemove || []; // Ensure this is an array
-
-    // Check if there are images to remove
-    if (imagesToRemove.length > 0) {
-      // Condition to remove specified images only if there are any to remove
-      updatedImages = updatedImages.filter(
-        (image) => !imagesToRemove.includes(image)
-      );
-    }
-
-    // Combine existing images with new uploads
-    const updatedFilenamesList = [...updatedImages, ...filenamesToUpdate];
-
-    // If you want to update the database, do it here:
-    existingImages.images = updatedFilenamesList;
-    await existingImages.save();
-
-    console.log("Original Images:", existingImages.images);
-    console.log("Images to Remove:", imagesToRemove);
-    console.log("Updated Images After Removal:", updatedImages);
-
-    const user = await ProductDetailModel.findByIdAndUpdate(
-      req.params.id,
-      {
-        title: req.body.title || singleUser.title,
-        price: req.body.price || singleUser.price,
-        description: req.body.description || singleUser.description,
-        images: existingImages.images,
-        variants: req.body.variants || singleUser.variants,
-        category: req.body.category || singleUser.category,
-        brand: req.body.brand || singleUser.brand,
-        tags: req.body.tags || singleUser.tags,
-        shippingandcustoms:
-          req.body.shippingandcustoms || singleUser.shippingandcustoms,
-        status: req.body.status || singleUser.status,
-        deals: req.body.deals || singleUser.deals,
-      },
-      {
-        new: true,
-      }
+    const singleJobPost = await client.query(
+      `SELECT * FROM jobpost WHERE job_id = $1`,
+      [req.params.id]
     );
-    res.json(user);
+    if (!singleJobPost.rows[0])
+      return res.status(404).send("Job post not found");
+    res.json(singleJobPost.rows[0]);
   } catch (err) {
     res.status(400).send({ message: err.message });
+  }
+};
+
+const deleteJobPost = async (req, res) => {
+  try {
+  } catch (err) {
+    res.status(400).send({ message: err.message });
+  }
+};
+
+const updatJobPost = async (req, res) => {
+  try {
+    const {
+      job_title,
+      job_location_type,
+      job_category,
+      job_type,
+      job_location,
+      job_experience_level,
+      job_technical_skills,
+      job_education_qualification,
+      job_description,
+      job_interview_rounds,
+      job_budget,
+      job_create_date,
+      job_close_date,
+      job_status,
+    } = req.body;
+
+    const { id } = req.params;
+
+    const updateJobPost = await client.query(
+      `UPDATE jobpost SET  
+      job_title= $1,  
+      job_location_type=$2, 
+      job_category= $3, 
+      job_type=$4,  
+      job_location= $5, 
+      job_experience_level=$6, 
+      job_technical_skills=$7,  
+      job_education_qualification= $8,  
+      job_description= $9,   
+      job_interview_rounds= $10, 
+      job_budget=$11,
+      job_create_date=$12,  
+      job_close_date=$13,  
+      job_status=$14
+      WHERE job_id = $15 
+      RETURNING *`,
+      [
+        job_title,
+        job_location_type,
+        job_category,
+        job_type,
+        job_location,
+        job_experience_level,
+        job_technical_skills,
+        job_education_qualification,
+        job_description,
+        job_interview_rounds,
+        job_budget,
+        job_create_date,
+        job_close_date,
+        job_status,
+        id,
+      ]
+    );
+
+    if (!updateJobPost.rows[0])
+      return res.status(404).send("Job Post not found");
+    res.status(200).json(updateJobPost.rows[0]);
+  } catch (err) {
+    res.status(400).send(err);
   }
 };
 
 module.exports = {
-  getAllProduct,
+  getAllJobPost,
   postJob,
-  deleteProduct,
-  getSingleProduct,
-  updateProduct,
+  deleteJobPost,
+  getSingleJobPost,
+  updatJobPost,
 };
