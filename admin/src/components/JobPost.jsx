@@ -4,14 +4,14 @@ import { ThemeContext } from "../App";
 import { useContext } from "react";
 import AddJobPost from "../pages/AddJobPost";
 import axios from "axios";
-import { ToastContainer } from "react-toastify";
-import EditProduct from "./EditProduct";
+import { ToastContainer, toast } from "react-toastify";
+import EditJobPost from "./EditJobPost";
 function JobPost() {
   const { job, setJob } = useContext(ThemeContext);
-    
+
   const [isAdd, setIsAdd] = useState(false);
-  const [editId,setEditId]=useState('');
-  const [isEdit,setIsEdit]=useState('');
+  const [editId, setEditId] = useState("");
+  const [isEdit, setIsEdit] = useState("");
   const [filterText, setFilterText] = useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
   const [open, setOpen] = useState(false);
@@ -63,7 +63,11 @@ function JobPost() {
     },
   ];
 
-  
+  useEffect(() => {
+    axios.get("http://localhost:3000/api/v1/jobpost").then((res) => {
+      setJob(res.data);
+    });
+  }, [setJob]);
 
   useEffect(() => {
     axios.get("http://localhost:3000/api/v1/jobpost").then((res) => {
@@ -85,7 +89,6 @@ function JobPost() {
       setFilterText("");
     }
   };
-
 
   function handleOpen() {
     setIsAdd(true);
@@ -112,12 +115,8 @@ function JobPost() {
       console.error("There was an error deleting the product:", error);
     });
 
-}
- 
- 
- 
-  
-  if (isAdd) return (
+  if (isAdd)
+    return (
       <AddJobPost
         handleOpen={handleOpen}
         setOpen={setOpen}
@@ -138,6 +137,23 @@ function JobPost() {
     
    
 
+  const handleEdit = (row) => {
+    setEditId(row.job_id);
+    setIsEdit(true);
+  };
+
+  if (isEdit)
+    return (
+      <EditJobPost
+        setOpen={setOpen}
+        handleOpen={handleOpen}
+        isEdit={isEdit}
+        editId={editId}
+        setIsEdit={setIsEdit}
+        setJob={setJob}
+        setIsAdd={setIsAdd}
+      />
+    );
 
   return (
     <div>
@@ -177,27 +193,27 @@ function JobPost() {
 
           {ok && (
             <div className="z-50 absolute  h-full w-full flex  justify-center  pt-5 top-0 left-0">
-      <div className=" w-[400px] h-[200px] flex flex-col gap-5 items-center justify-center bg-blue-300 rounded-3xl">
-        <h1>Are you sure you want to delete this product?</h1>
-        <div className=" flex gap-4">
-          <button
-            onClick={() => {
-              handleDeleteItem(id);
-                setOk(false)
-            }}
-            className=" px-4 py-2 rounded-xl bg-red-700"
-          >
-            Yes
-          </button>
-          <button
-            onClick={() => setOk(false)}
-            className=" px-4 py-2 rounded-xl bg-blue-500"
-          >
-            No
-          </button>
-        </div>
-      </div>
-    </div>
+              <div className=" w-[400px] h-[200px] flex flex-col gap-5 items-center justify-center bg-blue-300 rounded-3xl">
+                <h1>Are you sure you want to delete this product?</h1>
+                <div className=" flex gap-4">
+                  <button
+                    onClick={() => {
+                      handleDeleteItem(id);
+                      setOk(false);
+                    }}
+                    className=" px-4 py-2 rounded-xl bg-red-700"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    onClick={() => setOk(false)}
+                    className=" px-4 py-2 rounded-xl bg-blue-500"
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
 
           <div>

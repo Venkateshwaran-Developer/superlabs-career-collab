@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import {createContext, useState} from 'react';
+import {createContext, useEffect, useState} from 'react';
 import '@mantine/core/styles.css';
 import Dashboard from './pages/Dashboard';
 import JobPost from "./components/JobPost";
@@ -11,14 +11,22 @@ import { MantineProvider } from '@mantine/core';
 import Category from "./pages/Category";
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
-
-
+import axios from "axios";
 
 function App() {
+  const [job, setJob] = useState([]);
 
-  const [job , setJob] =useState([]);
+  const fetchAllData = async () => {
+    const res = await axios.get("http://localhost:3000/api/v1/jobpost");
+    setJob(res.data);
+  };
 
-  
+  useEffect(() => {
+    fetchAllData();
+  }, []);
+
+  console.log(job);
+
   return (
     <MantineProvider>
     <div className="font-Josefin">
@@ -40,7 +48,7 @@ function App() {
     </ThemeContext.Provider>
     </div>
     </MantineProvider>
-  )
+  );
 }
 
-export default App
+export default App;
