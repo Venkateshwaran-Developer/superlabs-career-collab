@@ -1,4 +1,5 @@
 const {getAllJobPost,postJob, deleteJobPost} = require("../controller/JobController");
+// const { loginUser } = require("../controllers/authController");
 const express = require('express');
 const router = express.Router();
 const { postLocation, getLocation, updateLocation, deleteLocation } = require("../controller/locationController");
@@ -42,5 +43,8 @@ router.get("/users", getUser)
 router.put("/users/:id", updateUser)
 //delete category
 router.delete("/users/:id",deleteUser)
+
+//auth login
+// router.post("/login", loginUser)
 
 module.exports = router;

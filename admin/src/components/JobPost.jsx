@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { ThemeContext } from "../App";
 import { useContext } from "react";
-import AddJobPost from "./AddJobPost";
+import AddJobPost from "../pages/AddJobPost";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import EditProduct from "./EditProduct";
 function JobPost() {
   const { job, setJob } = useContext(ThemeContext);
