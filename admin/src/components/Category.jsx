@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 
-const AddUsers = ({ onClose, onSubmit, editData }) => {
-  const [userName, setUserName] = useState(editData ? editData.user_title : "");
-  const [userCredit, setUserCredit] = useState(editData ? editData.user_password : "");
+const AddCategory
+ = ({ onClose, onSubmit, editData }) => {
+  const [categoryName, setCategoryName] = useState(editData ? editData.category_title : "");
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -14,26 +14,24 @@ const AddUsers = ({ onClose, onSubmit, editData }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (editData && editData.user_id) {
+    if (editData && editData.category_id) {
       // Update existing location
-      
       axios
-        .put(`http://localhost:3000/api/v1/users/${editData.user_id}`, { user_title: userName ,user_password: userCredit})
+        .put(`http://localhost:3000/api/v1/category/${editData.category_id}`, { category_title: categoryName })
         .then((res) => {
           onSubmit(res.data, "update");
           onClose();
         })
-        .catch((err) => console.log("Error updating User:", err));
+        .catch((err) => console.log("Error updating category:", err));
     } else {
       // Add new location
       axios
-        .post("http://localhost:3000/api/v1/users", { user_title: userName, user_password: userCredit })
+        .post("http://localhost:3000/api/v1/category", { category_title: categoryName })
         .then((res) => {
           onSubmit(res.data, "add");
-          setUserName("");
-          setUserCredit("");
+          setCategoryName(""); // Clear input
         })
-        .catch((err) => console.log("Error adding user:", err));
+        .catch((err) => console.log("Error adding category:", err));
     }
   };
 
@@ -41,21 +39,14 @@ const AddUsers = ({ onClose, onSubmit, editData }) => {
     <div className="p-4 border bg-gray-100 rounded-md shadow-lg">
       <form onSubmit={handleSubmit}>
         <label className="block mb-2 text-lg font-semibold">
-          {editData ? "Edit User" : "Add User"} <span className="text-red-500">*</span>
+          {editData ? "Edit Category" : "Add Category"} <span className="text-red-500">*</span>
         </label>
         <input
           ref={inputRef}
           type="text"
-          placeholder="Enter User"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
-          className="border p-2 rounded-md w-full mb-3 outline-none"
-        />
-        <input
-          type="text"
-          placeholder="Enter Password"
-          value={userCredit}
-          onChange={(e) => setUserCredit(e.target.value)}
+          placeholder="Enter Category"
+          value={categoryName}
+          onChange={(e) => setCategoryName(e.target.value)}
           className="border p-2 rounded-md w-full mb-3 outline-none"
         />
         <div className="flex gap-3">
@@ -71,60 +62,63 @@ const AddUsers = ({ onClose, onSubmit, editData }) => {
   );
 };
 
-const Users = () => {
-  const [users, setUsers] = useState([]);
-  const [userForm, setUserForm] = useState(false);
+const Category = () => {
+  const [categories, setCategories] = useState([]);
+  const [categoryForm, setCategoryForm] = useState(false);
   const [editData, setEditData] = useState(null);
 
   useEffect(() => {
-    fetchUsers();
+    fetchCategories();
   }, []);
 
-  const fetchUsers = () => {
+  const fetchCategories = () => {
     axios
-      .get("http://localhost:3000/api/v1/users")
-      .then((res) => setUsers(res.data))
-      .catch((err) => console.error("Error fetching users:", err));
+      .get("http://localhost:3000/api/v1/category")
+      .then((res) => setCategories(res.data))
+      .catch((err) => console.error("Error fetching categories:", err));
   };
 
-  const handleFormSubmit = (updatedUser, action) => {
+  const handleFormSubmit = (updatedCategory, action) => {
     if (action === "add") {
-      setUsers([...users, updatedUser]);
+      setCategories([...categories, updatedCategory]);
     } else if (action === "update") {
-      setUsers(users.map((user) => (user.user_id === updatedUser.user_id ? updatedUser : user)));
+      setCategories(categories.map((cat) => (cat.category_id === updatedCategory.category_id ? updatedCategory : cat)));
     }
-    setUserForm(false);
+    setCategoryForm(false);
     setEditData(null);
   };
 
-  const handleEdit = (user) => {
-    setEditData(user);
-    setUserForm(true);
+  const handleEdit = (category) => {
+    setEditData(category);
+    setCategoryForm(true);
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
+    if (window.confirm("Are you sure you want to delete this location?")) {
       axios
-        .delete(`http://localhost:3000/api/v1/users/${id}`)
+        .delete(`http://localhost:3000/api/v1/category/${id}`)
         .then(() => {
-          setUsers(users.filter((user) => user.user_id !== id));
+          setCategories(categories.filter((cat) => cat.category_id !== id));
         })
-        .catch((err) => console.error("Error deleting user:", err));
+        .catch((err) => console.error("Error deleting category:", err));
     }
   };
 
   return (
-    <main className="bg-white h-screen w-[82vw]">
+    <main className="flex justify-center items-center h-screen w-[82vw]">
+    <div className="flex pt-7 flex-col scrollbar scrollbar-thumb-sky-700 scrollbar-track-sky-300 h-32 overflow-y-scroll  px-10  w-[78vw] min-h-[90vh]  rounded-3xl  bg-white">
+
+    
       <div className="flex justify-between items-center py-5 px-10 bg-gradient-to-r from-[#F9FAFB] to-[#D9E9F5] text-4xl">
-        <h1>Users</h1>
+        <h1>Category</h1>
         <button
           onClick={() => {
             setEditData(null);
-            setUserForm(true);
+            setCategoryForm(true);
           }}
           className="text-[18px] font-semibold border-2 bg-blue-100 text-blue-800 px-3 rounded-full"
         >
-          Add User
+          Add Category
         </button>
       </div>
 
@@ -132,33 +126,31 @@ const Users = () => {
       <hr />
       <br />
 
-      {userForm && <AddUsers onClose={() => setUserForm(false)} onSubmit={handleFormSubmit} editData={editData} />}
+      {categoryForm && <AddCategory onClose={() => setCategoryForm(false)} onSubmit={handleFormSubmit} editData={editData} />}
 
       <div className="py-5 px-10">
         <table className="w-full border-collapse">
           <thead className="bg-[#F9FAFB]">
             <tr className="text-xl font-semibold">
               <th className="py-2 px-2 border text-start">S.No</th>
-              <th className="py-2 px-4 border text-start">Users</th>
-              <th className="py-2 px-4 border text-start">Credential</th>
+              <th className="py-2 px-4 border text-start">Category</th>
               <th className="py-2 px-4 border">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {users.map((user, index) => (
-              <tr key={user.user_id} className="border-b">
+            {categories.map((category, index) => (
+              <tr key={category.category_id} className="border-b">
                 <td className="py-2 px-2">{1 + index++}</td>
-                <td className="py-2 px-4">{user.user_title}</td>
-                <td className="py-2 px-4">{user.user_password}</td>
+                <td className="py-2 px-4">{category.category_title}</td>
                 <td className="py-2 px-4 flex gap-4 justify-center">
                   <button
-                    onClick={() => handleEdit(user)}
+                    onClick={() => handleEdit(category)}
                     className="text-sm font-medium border-2 bg-green-400 text-white px-3 rounded-full"
                   >
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDelete(user.user_id)}
+                    onClick={() => handleDelete(category.category_id)}
                     className="text-sm font-medium border-2 bg-red-400 text-white px-3 rounded-full"
                   >
                     Delete
@@ -169,17 +161,17 @@ const Users = () => {
           </tbody>
         </table>
       </div>
+      </div>
     </main>
   );
 };
-AddUsers.propTypes = {
+AddCategory.propTypes = {
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   editData: PropTypes.shape({
-    user_id: PropTypes.number,
-    user_title: PropTypes.string,
-    user_password: PropTypes.string,
+    category_id: PropTypes.number,
+    category_title: PropTypes.string,
   }),
 };
 
-export default Users;
+export default Category;

@@ -13,8 +13,8 @@ function MainLayout() {
         <h6 className="py-5 text-md font-bold text-gray-600">Menu</h6>
         <Link to="/">Dashboard</Link>
         <Link to="/jobpost">JobPost</Link>
-        <Link to="/candidates">Candidates</Link>
-        <Link to="/categories">Categories</Link>
+        <Link to="/location">Location</Link>
+        <Link to="/category">Categories</Link>
         <Link to="/users">Users</Link>
         <Link to="/selectedcandidates">Selected Candidates</Link>
       </div>

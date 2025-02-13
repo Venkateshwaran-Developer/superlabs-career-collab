@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 const client = require("../config/connectdatabase");
 const ProductDetailModel = require("../model/productDetail");
+=======
+const client =require( "../config/connectdatabase");
+>>>>>>> 7dc2279a4973043826b58b564a85c137b1c8d9b8
 
 const postJob = async (req, res) => {
   try {
@@ -19,7 +23,11 @@ const postJob = async (req, res) => {
       job_close_date,
       job_status,
     } = req.body;
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 7dc2279a4973043826b58b564a85c137b1c8d9b8
     const newJob = await client.query(
       `INSERT INTO jobpost (job_title,job_location_type,job_category,job_type,job_location,job_experience_level,job_technical_skills,job_education_qualification,job_description,job_interview_rounds,job_budget,job_create_date,job_close_date,job_status) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *`,
       [
@@ -50,12 +58,17 @@ const postJob = async (req, res) => {
 const getAllJobPost = async (req, res) => {
   try {
     const result = await client.query("SELECT * FROM jobpost");
+<<<<<<< HEAD
     res.json(result.rows);
+=======
+  res.json(result.rows); 
+>>>>>>> 7dc2279a4973043826b58b564a85c137b1c8d9b8
   } catch (err) {
     res.status(400).send({ message: err.message });
   }
 };
 
+<<<<<<< HEAD
 const getSingleJobPost = async (req, res) => {
   console.log(req.params.id);
 
@@ -71,6 +84,21 @@ const getSingleJobPost = async (req, res) => {
     res.status(400).send({ message: err.message });
   }
 };
+=======
+const deleteJobPost = async (req, res) => {
+  
+  const { id } = req.params;
+  console.log(id);
+  try {
+    await client.query("DELETE FROM jobpost WHERE job_id = $1", [id]);
+    res.json({ message: "Job posting deleted successfully" });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).json({ message: "Failed to delete job posting" });
+      }
+      };
+
+>>>>>>> 7dc2279a4973043826b58b564a85c137b1c8d9b8
 
 const deleteJobPost = async (req, res) => {
   try {
@@ -148,7 +176,11 @@ const updatJobPost = async (req, res) => {
 module.exports = {
   getAllJobPost,
   postJob,
+<<<<<<< HEAD
   deleteJobPost,
   getSingleJobPost,
   updatJobPost,
+=======
+  deleteJobPost
+>>>>>>> 7dc2279a4973043826b58b564a85c137b1c8d9b8
 };

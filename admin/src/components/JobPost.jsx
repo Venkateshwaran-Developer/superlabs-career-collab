@@ -52,7 +52,7 @@ function JobPost() {
           </button>
           <button
             className="bg-red-500 p-2 rounded-md"
-            onClick={() => handleDelete(row._id)}
+            onClick={() => handleDelete(row.job_id)}
           >
             Delete
           </button>
@@ -69,10 +69,25 @@ function JobPost() {
     });
   }, [setJob]);
 
+<<<<<<< HEAD
   const filteredItems = job?.filter(
     (item) =>
       item.job_title &&
       item.job_title.toLowerCase().includes(filterText.toLowerCase())
+=======
+  useEffect(() => {
+    axios.get("http://localhost:3000/api/v1/jobpost").then((res) => {
+      setJob(res.data);
+    });
+  }, [setJob]);
+
+  
+
+ 
+  const filteredItems = job.filter(
+    (item) =>
+      item.job_title && item.job_title.toLowerCase().includes(filterText.toLowerCase())
+>>>>>>> 7dc2279a4973043826b58b564a85c137b1c8d9b8
   );
   const onFilter = (e) => setFilterText(e.target.value);
   const handleClear = () => {
@@ -86,12 +101,18 @@ function JobPost() {
     setIsAdd(true);
   }
 
+<<<<<<< HEAD
   const handleDelete = (id) => {
     setId(id);
+=======
+  const handleDelete = (job_id) => {
+    setId(job_id);
+>>>>>>> 7dc2279a4973043826b58b564a85c137b1c8d9b8
     setOk(true);
   };
 
   const handleDeleteItem = (id) => {
+<<<<<<< HEAD
     axios
       .delete(`http://localhost:3000/api/v1/product/${id}`)
       .then((response) => {
@@ -104,6 +125,22 @@ function JobPost() {
         console.error("There was an error deleting the product:", error);
       });
   };
+=======
+    console.log(id)
+
+
+
+    axios.delete(`http://localhost:3000/api/v1/jobpost/${id}`)
+    .then((response) => {
+      if (response.status === 200) {
+        const filteredItems = job.filter((item) => item.job_id !== id);
+        setJob(filteredItems);
+      }
+    })
+    .catch((error) => {
+      console.error("There was an error deleting the product:", error);
+    });
+>>>>>>> 7dc2279a4973043826b58b564a85c137b1c8d9b8
 
   if (isAdd)
     return (
@@ -116,6 +153,19 @@ function JobPost() {
         setIsAdd={setIsAdd}
       />
     );
+<<<<<<< HEAD
+=======
+    
+    
+    const handleEdit = (row)=>{    
+      setEditId(emp.job_id);
+      setIsEdit(true); 
+    
+    }
+    if(isEdit) return <EditProduct  setOpen={setOpen} handleOpen={handleOpen} product={product} setJob={setJob} isEdit={isEdit} editId={editId} setIsEdit={setIsEdit}/>
+    
+   
+>>>>>>> 7dc2279a4973043826b58b564a85c137b1c8d9b8
 
   const handleEdit = (row) => {
     setEditId(row.job_id);
