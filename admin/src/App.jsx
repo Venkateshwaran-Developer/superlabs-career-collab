@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {createContext, useEffect, useState} from 'react';
 import '@mantine/core/styles.css';
 import Dashboard from './pages/Dashboard';
-import JobPost from "./components/JobPost";
 import Location from "./pages/Location";
 import Users from "./pages/Users";
 import SelectedCandidates from "./pages/SelectedCandidates";
@@ -12,6 +11,7 @@ import Category from "./pages/Category";
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import axios from "axios";
+import JobPost from "./pages/JobPost";
 
 function App() {
   const [job, setJob] = useState([]);

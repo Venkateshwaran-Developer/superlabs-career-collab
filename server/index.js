@@ -16,13 +16,6 @@ app.use(express.static("public"));
 
 app.use("/api/v1", router);
 
-<<<<<<< HEAD
-app.listen(process.env.PORT,()=>{
-    console.log(`Server is running on port ${process.env.PORT}`);
-})
-
-=======
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
 });
->>>>>>> 796802117feb579f5ddfeec41078bf0da29153fd

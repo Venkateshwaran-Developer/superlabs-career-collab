@@ -2,11 +2,17 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { Edit, Trash2 } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
+
+const API = import.meta.env.VITE_API_URL;
 
 const AddUsers = ({ onClose, onSubmit, editData }) => {
   const [userName, setUserName] = useState(editData ? editData.user_title : "");
+  const [userEmail, setUserEmail] = useState(editData ? editData.user_email : "");
   const [userCredit, setUserCredit] = useState(editData ? editData.user_password : "");
   const inputRef = useRef(null);
+
+  
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -17,7 +23,7 @@ const AddUsers = ({ onClose, onSubmit, editData }) => {
 
     if (editData && editData.user_id) {
       axios
-        .put(`http://localhost:3000/api/v1/users/${editData.user_id}`, { user_title: userName, user_password: userCredit })
+        .put(`${API}/${editData.user_id}`, { user_title: userName, user_password: userCredit, user_email: userEmail })
         .then((res) => {
           onSubmit(res.data, "update");
           onClose();
@@ -25,11 +31,12 @@ const AddUsers = ({ onClose, onSubmit, editData }) => {
         .catch((err) => console.log("Error updating User:", err));
     } else {
       axios
-        .post("http://localhost:3000/api/v1/users", { user_title: userName, user_password: userCredit })
+        .post(`${API}`, { user_title: userName, user_password: userCredit, user_email: userEmail })
         .then((res) => {
           onSubmit(res.data, "add");
           setUserName("");
           setUserCredit("");
+          setUserEmail("");
         })
         .catch((err) => console.log("Error adding user:", err));
     }
@@ -44,9 +51,16 @@ const AddUsers = ({ onClose, onSubmit, editData }) => {
         <input
           ref={inputRef}
           type="text"
-          placeholder="Enter User"
+          placeholder="Enter Name"
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
+          className="border p-2 rounded-md w-full mb-4 outline-none focus:ring-2 focus:ring-blue-300"
+        />
+        <input
+          type="email"
+          placeholder="Enter Email"
+          value={userEmail}
+          onChange={(e) => setUserEmail(e.target.value)}
           className="border p-2 rounded-md w-full mb-4 outline-none focus:ring-2 focus:ring-blue-300"
         />
         <input
@@ -80,7 +94,7 @@ const Users = () => {
 
   const fetchUsers = () => {
     axios
-      .get("http://localhost:3000/api/v1/users")
+      .get(`${API}`)
       .then((res) => setUsers(res.data))
       .catch((err) => console.error("Error fetching users:", err));
   };
@@ -103,14 +117,14 @@ const Users = () => {
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
       axios
-        .delete(`http://localhost:3000/api/v1/users/${id}`)
+        .delete(`${API}/${id}`)
         .then(() => {
           setUsers(users.filter((user) => user.user_id !== id));
         })
         .catch((err) => console.error("Error deleting user:", err));
     }
   };
-
+  const [visible, setVisible] = useState(false)
   return (
     <main className="flex flex-col items-center w-full px-6 py-6">
       <div className="w-full max-w-5xl bg-white rounded-lg shadow-md p-6">
@@ -134,7 +148,8 @@ const Users = () => {
             <thead className="bg-gray-100">
               <tr className="text-sm font-semibold text-gray-700">
                 <th className="py-3 px-4 border text-start">S.No</th>
-                <th className="py-3 px-4 border text-start">Username</th>
+                <th className="py-3 px-4 border text-start">User Name</th>
+                <th className="py-3 px-4 border text-start">User Email</th>
                 <th className="py-3 px-4 border text-start">Password</th>
                 <th className="py-3 px-4 border text-center">Actions</th>
               </tr>
@@ -145,8 +160,15 @@ const Users = () => {
                   <tr key={user.user_id} className="border-b hover:bg-gray-50 transition">
                     <td className="py-3 px-4">{index + 1}</td>
                     <td className="py-3 px-4">{user.user_title}</td>
-                    <td className="py-3 px-4">{user.user_password}</td>
-                    <td className="py-3 px-4 flex justify-center gap-4">
+                    <td className="py-3 px-4">{user.user_email}</td>
+                    {/* <td className="py-3 px-4">{user.user_password}</td> */}
+                    <td className="py-3 px-4 flex items-center space-x-2">
+                      <span>{visible ? user.user_password : "•".repeat(8)}</span>
+                      <button onClick={() => setVisible(!visible)} className="ml-2">
+                        {visible ? <EyeOff size={18} /> : <Eye size={18} />}
+                      </button>
+                    </td>
+                    <td className="py-1 px-1 space-x-3 text-center">
                       <button onClick={() => handleEdit(user)} className="text-green-600 hover:text-green-800">
                         <Edit size={20} />
                       </button>
