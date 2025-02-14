@@ -4,8 +4,8 @@ const postUser = async (req, res) => {
     try {
         const { user_title,user_password } = req.body;
         const newUser = await client.query(
-            `INSERT INTO users (user_title, user_password) VALUES($1, $2) RETURNING *`,
-            [user_title,user_password]
+            `INSERT INTO users (user_title, user_email, user_password) VALUES($1, $2, $3) RETURNING *`,
+            [user_title,user_password,user_password]
         );
         res.json(newUser.rows[0]);
     } catch (err) {
@@ -27,10 +27,10 @@ const getUser = async (req, res) => {
 const updateUser = async (req, res) => {
     try {
         const { id } = req.params;
-        const { user_title,user_password } = req.body;
+        const { user_title,user_email,user_password } = req.body;
         const updatedUser = await client.query(
-            `UPDATE users SET user_title = $1, user_password = $2 WHERE user_id = $3 RETURNING *`,
-            [user_title,user_password, id]
+            `UPDATE users SET user_title = $1, user_email = $2, user_password = $3 WHERE user_id = $4 RETURNING *`,
+            [user_title,user_email,user_password, id]
         );
 
         if (updatedUser.rows.length === 0) {

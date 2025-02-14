@@ -13,10 +13,16 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // Import Quill styles
 import "../index.css";
 
-
-function AddJobPost({ job, setJob, setIsAdd }) {
-  const [category, setCategory] = useState([]);
-   const [newJobPost, setNewJobPost] = useState([
+function EditJobPost({
+  setOpen,
+  handleOpen,
+  isEdit,
+  editId,
+  setIsEdit,
+  job,
+  setJob,
+}) {
+  const [newJobPost, setNewJobPost] = useState([
     {
       job_title: "",
       job_location_type: [],
@@ -31,16 +37,36 @@ function AddJobPost({ job, setJob, setIsAdd }) {
       job_budget: "",
       job_create_date: "",
       job_close_date: "",
-      job_status:""
+      job_status: "",
     },
   ]);
+
+  ///////////////////////////////////////////////////////////////////////////
+
+  const [singleJobPost, setsingleJobPost] = useState();
+
+  const fetchSingleData = async () => {
+    const response = await axios.get(
+      `http://localhost:3000/api/v1/jobpost/${editId}`
+    );
+    console.log(response);
+    setsingleJobPost(response.data);
+  };
+
+  useEffect(() => {
+    fetchSingleData();
+  }, [editId]);
+
+  console.log(singleJobPost);
+
+  ///////////////////////////////////////////////////////////////////////
 
   function handleOpen() {
     setOpen(!open);
   }
 
   function handleClose() {
-    setIsAdd(false);
+    setIsEdit(!isEdit);
   }
 
   const handleSingleFieldChange = (e) => {
@@ -50,88 +76,80 @@ function AddJobPost({ job, setJob, setIsAdd }) {
   // Job Created Date
 
   const [createDate, setCreateDate] = useState();
- 
-  const handleCreatedDate = (e) =>{
+
+  const handleCreatedDate = (e) => {
     setCreateDate(e.target.value);
-    setNewJobPost({ ...newJobPost, job_create_date:createDate });
-  }
+    setNewJobPost({ ...newJobPost, job_create_date: createDate });
+  };
 
+  // Job Close Date
 
-   // Job Close Date
+  const [closeDate, setCloseDate] = useState();
 
-   const [closeDate, setCloseDate] = useState();
- 
-   const handleCloseDate = (e) =>{
+  const handleCloseDate = (e) => {
     setCloseDate(e.target.value);
-     setNewJobPost({ ...newJobPost, job_close_date:closeDate });
-   }
+    setNewJobPost({ ...newJobPost, job_close_date: closeDate });
+  };
 
-
- 
   // Job Description
 
   const handleJobDescription = (value) => {
-      setNewJobPost({ ...newJobPost, job_description: value });
+    setNewJobPost({ ...newJobPost, job_description: value });
   };
 
+  // Educational Qualification
 
+  const [education, setEducation] = useState("");
+  const [educationalValues, setEducationalValues] = useState([]);
 
-   // Educational Qualification
-
-   const [education, setEducation] = useState("");
-   const [educationalValues, setEducationalValues] = useState([]);
- 
-   const handleInputEducationChange = (e) => {
+  const handleInputEducationChange = (e) => {
     setEducation(e.target.value);
-   };
- 
-   const handleKeyDownEducation = (e) => {
-     if (e.key === "Enter") {
-       addEduValue();
-     }
-   };
- 
-   const addEduValue = () => {
-     if (education !== "") {
+  };
+
+  const handleKeyDownEducation = (e) => {
+    if (e.key === "Enter") {
+      addEduValue();
+    }
+  };
+
+  const addEduValue = () => {
+    if (education !== "") {
       setEducationalValues([...educationalValues, education]);
       setEducation("");
-     }
-   };
- 
-   const removeEducation = (index) => {
-     const newlocationValues = educationalValues.filter((_, i) => i !== index);
-     setEducationalValues(newlocationValues);
-   };
+    }
+  };
 
+  const removeEducation = (index) => {
+    const newlocationValues = educationalValues.filter((_, i) => i !== index);
+    setEducationalValues(newlocationValues);
+  };
 
+  // Mandatory Technical Skills
 
-   // Mandatory Technical Skills
+  const [jobTechSkills, setJobTechSkills] = useState("");
+  const [techSkillsValues, setTechSkillsValues] = useState([]);
 
-   const [jobTechSkills, setJobTechSkills] = useState("");
-   const [techSkillsValues, setTechSkillsValues] = useState([]);
- 
-   const handleInputTechSkillsChange = (e) => {
+  const handleInputTechSkillsChange = (e) => {
     setJobTechSkills(e.target.value);
-   };
- 
-   const handleKeyDownTechSkills = (e) => {
-     if (e.key === "Enter") {
-       addTechValue();
-     }
-   };
- 
-   const addTechValue = () => {
-     if (jobTechSkills !== "") {
-      setTechSkillsValues([...techSkillsValues, jobTechSkills]);
-       setJobTechSkills("");
-     }
-   };
- 
-   const removeTechnicalSkills = (index) => {
-     const newlocationValues = techSkillsValues.filter((_, i) => i !== index);
-     setTechSkillsValues(newlocationValues);
-   };
+  };
 
+  const handleKeyDownTechSkills = (e) => {
+    if (e.key === "Enter") {
+      addTechValue();
+    }
+  };
+
+  const addTechValue = () => {
+    if (jobTechSkills !== "") {
+      setTechSkillsValues([...techSkillsValues, jobTechSkills]);
+      setJobTechSkills("");
+    }
+  };
+
+  const removeTechnicalSkills = (index) => {
+    const newlocationValues = techSkillsValues.filter((_, i) => i !== index);
+    setTechSkillsValues(newlocationValues);
+  };
 
   // Job Location
 
@@ -173,58 +191,70 @@ function AddJobPost({ job, setJob, setIsAdd }) {
     );
   };
 
-   // Job Type
+  // Job Type
 
-   const [jobType, setJobType] = useState([]);
+  const [jobType, setJobType] = useState([]);
 
-   const handleJobType = (event) => {
-     const value = event.target.value;
-     setJobType((prevlocationValues) =>
-       prevlocationValues.includes(value)
-         ? prevlocationValues.filter((v) => v !== value)
-         : [...prevlocationValues, value]
-     );
-   };
+  const handleJobType = (event) => {
+    const value = event.target.value;
+    setJobType((prevlocationValues) =>
+      prevlocationValues.includes(value)
+        ? prevlocationValues.filter((v) => v !== value)
+        : [...prevlocationValues, value]
+    );
+  };
 
-   useEffect(()=>{
-    axios.get("http://localhost:3000/api/v1/category")
-    .then((response) => {
-      setCategory(response.data);
-      })
-
-  })
-
-
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    
-   
 
-    axios.post("http://localhost:3000/api/v1/jobpost", {
-      job_title:newJobPost.job_title,
-      job_location_type:locationType,
-      job_category:newJobPost.job_category,
-      job_type:jobType,
-      job_location:locationValues,
-      job_experience_level:newJobPost.job_experience_level,
-      job_technical_skills:techSkillsValues,
-      job_education_qualification:educationalValues,
-      job_description:newJobPost.job_description,
-      job_interview_rounds:newJobPost.job_interview_rounds,
-      job_budget:newJobPost.job_budget,
-      job_create_date:createDate,
-      job_close_date:closeDate,
-      job_status:newJobPost.job_status,
+    console.log(
+      "Updating job post:",
+      newJobPost.job_title,
+      locationType,
+      newJobPost.job_category,
+      jobType,
+      locationValues,
+      newJobPost.job_experience_level,
+      techSkillsValues,
+      educationalValues,
+      newJobPost.job_education_qualification,
+      newJobPost.job_description,
+      newJobPost.job_interview_rounds,
+      newJobPost.job_budget,
+      createDate,
+      closeDate,
+      newJobPost.job_status
+    );
 
-    }, {
-        headers: {
-          'Content-Type': 'application/json',
+    await axios
+      .put(
+        `http://localhost:3000/api/v1/jobpost/${editId}`,
+        {
+          job_title: newJobPost.job_title,
+          job_location_type: locationType,
+          job_category: newJobPost.job_category,
+          job_type: jobType,
+          job_location: locationValues,
+          job_experience_level: newJobPost.job_experience_level,
+          job_technical_skills: techSkillsValues,
+          job_education_qualification: educationalValues,
+          job_description: newJobPost.job_description,
+          job_interview_rounds: newJobPost.job_interview_rounds,
+          job_budget: newJobPost.job_budget,
+          job_create_date: createDate,
+          job_close_date: closeDate,
+          job_status: newJobPost.job_status,
         },
-      })
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
       .then((res) => {
+        setJob(job?.map((j) => (j.job_id === editId ? res.data : j)));
+
         console.log(res);
-        setJob([...job, res.data]);
-        setIsAdd(false);
       })
       .catch((err) => {
         console.log(err);
@@ -241,7 +271,7 @@ function AddJobPost({ job, setJob, setIsAdd }) {
       >
         <DialogHeader className="relative font-Josefin  block space-y-4 pb-6">
           <Typography className="font-Josefin" variant="h4" color="blue-gray">
-            Create your JobPost
+            Edit your JobPost
           </Typography>
           <Typography className="mt-1 font-Josefin font-medium text-gray-600">
             Complete the form below with your job details.
@@ -274,21 +304,19 @@ function AddJobPost({ job, setJob, setIsAdd }) {
             />
           </div>
           <div>
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="mb-2 text-left font-Josefin font-medium"
-              >
-                Job Location Type
-              </Typography>
-              <div className="flex gap-5 text-base">
-
+            <Typography
+              variant="small"
+              color="blue-gray"
+              className="mb-2 text-left font-Josefin font-medium"
+            >
+              Job Location Type
+            </Typography>
+            <div className="flex gap-5 text-base">
               <label>
                 <input
                   type="checkbox"
                   value="Onsite"
                   className="mr-2"
-                 
                   onChange={(event) => handleLocationType(event)}
                 />
                 Onsite
@@ -303,11 +331,9 @@ function AddJobPost({ job, setJob, setIsAdd }) {
                 />
                 Remote
               </label>
-              
-              
-              </div>
             </div>
-         
+          </div>
+
           <div>
             <Typography
               variant="small"
@@ -325,30 +351,32 @@ function AddJobPost({ job, setJob, setIsAdd }) {
                 onChange={(e) => handleSingleFieldChange(e)}
               >
                 <option>Choose your job Category</option>
-                {
-                  category.map((category) => (
-                    <option key={category.category_id} value={category.category_title}>{category.category_title}</option>))
-                }
+                <option name="ManagementRole" value="ManagementRole">
+                  Management Role
+                </option>
+                <option name="DevelopmentRole" value="DevelopmentRole">
+                  Development Role
+                </option>
+                <option name="SalesRole" value="SalesRole">
+                  Sales Role
+                </option>
               </select>
             </div>
           </div>
           <div>
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="mb-2 text-left font-Josefin font-medium"
-              >
-                Job Type
-              </Typography>
-              <div className="flex gap-5 text-base">
-
-              
+            <Typography
+              variant="small"
+              color="blue-gray"
+              className="mb-2 text-left font-Josefin font-medium"
+            >
+              Job Type
+            </Typography>
+            <div className="flex gap-5 text-base">
               <label>
                 <input
                   type="checkbox"
                   value="FullTime"
                   className="mr-2"
-                 
                   onChange={(event) => handleJobType(event)}
                 />
                 Full Time
@@ -373,7 +401,7 @@ function AddJobPost({ job, setJob, setIsAdd }) {
                 />
                 Intership
               </label>
-              <br/>
+              <br />
               <label>
                 <input
                   type="checkbox"
@@ -383,9 +411,9 @@ function AddJobPost({ job, setJob, setIsAdd }) {
                 />
                 Contract
               </label>
-              </div>
             </div>
-            <div>
+          </div>
+          <div>
             <Typography
               variant="small"
               color="blue-gray"
@@ -399,7 +427,6 @@ function AddJobPost({ job, setJob, setIsAdd }) {
                   <div
                     key={index}
                     className="flex text-base items-center bg-gray-200 p-1 m-1 rounded"
-                  
                   >
                     {value}{" "}
                     <button
@@ -413,7 +440,6 @@ function AddJobPost({ job, setJob, setIsAdd }) {
                 <input
                   type="text"
                   value={jobLocation}
-
                   onChange={handleInputLocationChange}
                   onKeyDown={handleKeyDownJobLocation}
                   placeholder="Enter a value and press Enter"
@@ -422,7 +448,7 @@ function AddJobPost({ job, setJob, setIsAdd }) {
               </div>
             </div>
           </div>
-            <div>
+          <div>
             <Typography
               variant="small"
               color="blue-gray"
@@ -448,7 +474,7 @@ function AddJobPost({ job, setJob, setIsAdd }) {
             >
               Mandatory Technical Skills
             </Typography>
-            
+
             <div className="flex flex-col items-start ">
               <div className="flex flex-wrap border border-gray-300 rounded  w-full">
                 {techSkillsValues.map((value, index) => (
@@ -484,7 +510,7 @@ function AddJobPost({ job, setJob, setIsAdd }) {
             >
               Education Qualification
             </Typography>
-            
+
             <div className="flex flex-col items-start ">
               <div className="flex flex-wrap border border-gray-300 rounded  w-full">
                 {educationalValues.map((value, index) => (
@@ -518,7 +544,7 @@ function AddJobPost({ job, setJob, setIsAdd }) {
               color="blue-gray"
               className="mb-2 text-left font-medium font-Josefin"
             >
-             Job Description
+              Job Description
             </Typography>
             <div>
               <ReactQuill
@@ -569,8 +595,7 @@ function AddJobPost({ job, setJob, setIsAdd }) {
               onChange={(e) => handleSingleFieldChange(e)}
             />
           </div>
-     
-         
+
           <div>
             <Typography
               variant="small"
@@ -590,10 +615,8 @@ function AddJobPost({ job, setJob, setIsAdd }) {
             />
           </div>
 
-        
-
           <div>
-          <Typography
+            <Typography
               variant="small"
               color="blue-gray"
               className="mb-2 text-left font-Josefin font-medium"
@@ -601,16 +624,15 @@ function AddJobPost({ job, setJob, setIsAdd }) {
               Created Date
             </Typography>
             <div>
-            <input 
-                type="date" 
-                value={createDate} 
-                onChange={(e) => handleCreatedDate(e)} 
+              <input
+                type="date"
+                value={createDate}
+                onChange={(e) => handleCreatedDate(e)}
               />
             </div>
-
           </div>
           <div>
-          <Typography
+            <Typography
               variant="small"
               color="blue-gray"
               className="mb-2 text-left font-Josefin font-medium"
@@ -618,13 +640,12 @@ function AddJobPost({ job, setJob, setIsAdd }) {
               Valid Through
             </Typography>
             <div>
-            <input 
-                type="date" 
-                value={closeDate} 
-                onChange={(e) => handleCloseDate(e)} 
+              <input
+                type="date"
+                value={closeDate}
+                onChange={(e) => handleCloseDate(e)}
               />
             </div>
-
           </div>
           <div>
             <Typography
@@ -650,9 +671,7 @@ function AddJobPost({ job, setJob, setIsAdd }) {
                   Inactive
                 </option>
               </select>
-             
             </div>
-           
           </div>
         </DialogHeader>
         <DialogFooter>
@@ -665,4 +684,4 @@ function AddJobPost({ job, setJob, setIsAdd }) {
   );
 }
 
-export default AddJobPost;
+export default EditJobPost;

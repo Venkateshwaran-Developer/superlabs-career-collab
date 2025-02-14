@@ -8,10 +8,9 @@ const LoginPage = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    // Mock authentication (Replace this with an API call)
     if (username === "admin" && password === "admin123") {
       localStorage.setItem("isAuthenticated", "true");
-      navigate("/"); // Redirect after login
+      navigate("/"); 
     } else {
       alert("Invalid credentials");
     }

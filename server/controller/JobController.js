@@ -68,9 +68,75 @@ const deleteJobPost = async (req, res) => {
       }
       };
 
+const updatJobPost = async (req, res) => {
+  try {
+    const {
+      job_title,
+      job_location_type,
+      job_category,
+      job_type,
+      job_location,
+      job_experience_level,
+      job_technical_skills,
+      job_education_qualification,
+      job_description,
+      job_interview_rounds,
+      job_budget,
+      job_create_date,
+      job_close_date,
+      job_status,
+    } = req.body;
+
+    const { id } = req.params;
+
+    const updateJobPost = await client.query(
+      `UPDATE jobpost SET  
+      job_title= $1,  
+      job_location_type=$2, 
+      job_category= $3, 
+      job_type=$4,  
+      job_location= $5, 
+      job_experience_level=$6, 
+      job_technical_skills=$7,  
+      job_education_qualification= $8,  
+      job_description= $9,   
+      job_interview_rounds= $10, 
+      job_budget=$11,
+      job_create_date=$12,  
+      job_close_date=$13,  
+      job_status=$14
+      WHERE job_id = $15 
+      RETURNING *`,
+      [
+        job_title,
+        job_location_type,
+        job_category,
+        job_type,
+        job_location,
+        job_experience_level,
+        job_technical_skills,
+        job_education_qualification,
+        job_description,
+        job_interview_rounds,
+        job_budget,
+        job_create_date,
+        job_close_date,
+        job_status,
+        id,
+      ]
+    );
+
+    if (!updateJobPost.rows[0])
+      return res.status(404).send("Job Post not found");
+    res.status(200).json(updateJobPost.rows[0]);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
 
 module.exports = {
   getAllJobPost,
   postJob,
-  deleteJobPost
+  deleteJobPost,
+  updatJobPost
 };

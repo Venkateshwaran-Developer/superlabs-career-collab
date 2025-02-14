@@ -1,14 +1,20 @@
-const {getAllJobPost,postJob, deleteJobPost} = require("../controller/JobController");
-const express = require('express');
+const {
+  getAllJobPost,
+  deleteJobPost,
+  updatJobPost,
+  postJob
+} = require("../controller/JobController");
+const express = require("express");
 const router = express.Router();
 const { postLocation, getLocation, updateLocation, deleteLocation } = require("../controller/locationController");
 const { postCategory, getCategory, updateCategory, deleteCategory } = require("../controller/categoryController");
 const { postUser, getUser, updateUser, deleteUser } = require("../controller/usersController");
 
+router.get("/jobpost", getAllJobPost);
 
-router.post("/jobpost",postJob )
+router.put("/jobpost/:id", updatJobPost);
 
-router.get("/jobpost",getAllJobPost)
+router.get("/jobpost",postJob)
 
 router.delete("/jobpost/:id", deleteJobPost);
 
@@ -42,5 +48,8 @@ router.get("/users", getUser)
 router.put("/users/:id", updateUser)
 //delete category
 router.delete("/users/:id",deleteUser)
+
+//auth login
+// router.post("/login", loginUser)
 
 module.exports = router;
